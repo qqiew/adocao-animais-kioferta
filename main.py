@@ -1,17 +1,26 @@
-from dominio.produto import Produto
-from dominio.mercado import Mercado
-from dominio.oferta import Oferta
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
-# python não usa a palavra new para criar objetos
-arroz = Produto(12, "Tio João", 23.50)
-feijao = Produto(10, "carioca", 10.50 )
-cafe = Produto(4, "Três corações", 13.60)
-lista_de_produtos = [arroz, feijao, cafe]
-for i in lista_de_produtos:
-    print(f" Nome: {i._nome} e o preço é {i._preco} ")
-try:
-    resultado = cafe.alterar_preco(-1)
-except ValueError as e:
-    print(f"Erro: {e}")
+from app.routes.produto_routes import router as produto_router
+from app.routes.usuario_routes import router as usuario_router
+from app.routes.mercado_routes import router as mercado_router
+from app.routes.oferta_routes import router as oferta_router
 
-print( f" Novo preço do café { cafe.mostrar_preco() }"  )
+app = FastAPI(title='KiOferta API', version='1.0')
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=['*'],
+    allow_methods=['*'],
+    allow_headers=['*'],
+)
+
+app.include_router(produto_router)
+app.include_router(usuario_router)
+app.include_router(mercado_router)
+app.include_router(oferta_router)
+
+
+@app.get('/')
+def raiz():
+    return {'api': 'KiOferta', 'docs': '/docs'}
