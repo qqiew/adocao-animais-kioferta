@@ -109,11 +109,11 @@ print('\n9. Colecoes: filtrar')
 from app.controllers.adocao_controller import AdocaoController
 from app.controllers.animal_controller import AnimalController
 ac = AnimalController()
-checar(len(ac.listar_por_especie('gato')) == 3, 'tres gatos no mock')
+checar(len(ac.listar_por_especie('gato')) == 5, 'cinco gatos no mock')
 checar(ac.listar_por_especie('xyz') == [], 'especie inexistente devolve lista vazia')
 checar(ac.buscar(999) is None, 'animal inexistente devolve None')
 adc = AdocaoController(ac.mostrar_modelos())
-checar(len(ac.listar_disponiveis()) == 5, 'um animal ja adotado fica de fora dos disponiveis')
+checar(len(ac.listar_disponiveis()) == 5, 'os animais ja adotados ficam de fora dos disponiveis')
 checar(adc.listar_por_adotante(999) is None, 'adotante inexistente devolve None')
 checar(adc.registrar(999, 1) is None, 'adocao de animal inexistente devolve None')
 
