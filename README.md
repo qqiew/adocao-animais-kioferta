@@ -164,12 +164,6 @@ Exemplo: `POST /api/adocoes` com `{"animal_id": 3, "adotante_id": 2}` devolve 20
 
 Para ver um erro: `{"animal_id": 1, "adotante_id": 2}` devolve 422 (cão grande, adotante sem quintal).
 
-## Quem fez o quê
-
-| Integrante | Parte |
-| --- | --- |
-| _preencher_ | _preencher_ |
-
 ## Saída do verificar.py
 
 ```
