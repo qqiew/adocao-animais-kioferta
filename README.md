@@ -75,14 +75,22 @@ main.py  →  routes/  →  controllers/  →  models/  →  data/
 
 ## Diagrama de classes
 
+`-` protegido · `+` público · triângulo vazio = herança · seta = associação com multiplicidade
+
+> **Nota sobre os sinais:** seguimos a convenção do enunciado, em que `-` marca atributo protegido.
+> Na UML padrão, `-` significa privado e `#` significa protegido. Os atributos do projeto são
+> protegidos, com um sublinhado (`_nome`), que é a convenção do Python para "uso interno da classe e
+> das filhas". Por isso `Cao` e `Gato` acessam `self._porte` diretamente. Se fossem privados, com dois
+> sublinhados (`__porte`), o Python faria name mangling e as filhas não enxergariam o atributo pelo nome.
+
 ```mermaid
 classDiagram
     class Animal {
-        #int _id
-        #str _nome
-        #int _idade
-        #str _porte
-        #bool _adotado
+        -int _id
+        -str _nome
+        -int _idade
+        -str _porte
+        -bool _adotado
         +ESPECIE
         +TAXA_ADOCAO
         +mostrar_*()
@@ -105,21 +113,21 @@ classDiagram
         +descricao() str
     }
     class Adotante {
-        #int _id
-        #str _nome
-        #int _idade
-        #bool _tem_quintal
-        #int _adocoes
+        -int _id
+        -str _nome
+        -int _idade
+        -bool _tem_quintal
+        -int _adocoes
         +IDADE_MINIMA = 18
         +MAX_ADOCOES = 2
         +pode_adotar() bool
         +registrar_adocao()
     }
     class Adocao {
-        #int _id
-        #Animal _animal
-        #Adotante _adotante
-        #str _data
+        -int _id
+        -Animal _animal
+        -Adotante _adotante
+        -str _data
         +alterar_data()
         +e_do_adotante(id) bool
         +valor_taxa() float
@@ -159,10 +167,23 @@ classDiagram
 Exemplo: `POST /api/adocoes` com `{"animal_id": 3, "adotante_id": 2}` devolve 201:
 
 ```json
-{"id": 2, "animal": "Luna", "adotante": "Bruno Lima", "data": "2026-10-05", "taxa": 50.0}
+{"id": 6, "animal": "Luna", "adotante": "Bruno Lima", "data": "<data de hoje>", "taxa": 50.0}
 ```
 
 Para ver um erro: `{"animal_id": 1, "adotante_id": 2}` devolve 422 (cão grande, adotante sem quintal).
+
+## Quem fez o quê
+
+| Integrante | Contribuição |
+| --- | --- |
+| Kenzo Watanabe | Estrutura em camadas a partir do KiOferta, mocks (`data/`), models `Animal`, `Cao`, `Gato`, `Adotante`, `Adocao` e `ConflitoError`, ajustes no README |
+| Pedro Araujo | Controllers `AnimalController` e `AdocaoController` |
+| Mateus Lunardi | Rotas de animais e de adoções, ligação no `main.py` |
+| Pedro Paulo | Correção das rotas de adoção, `verificar.py` e `testar_rotas.py`, ampliação dos mocks, apresentação em PowerPoint |
+| Henrique Orlandini | README (documentação, diagrama e tabela de rotas) |
+
+
+---
 
 ## Saída do verificar.py
 
@@ -212,10 +233,10 @@ Para ver um erro: `{"animal_id": 1, "adotante_id": 2}` devolve 422 (cão grande,
   ok      a adocao sabe de quem e
 
 9. Colecoes: filtrar
-  ok      tres gatos no mock
+  ok      cinco gatos no mock
   ok      especie inexistente devolve lista vazia
   ok      animal inexistente devolve None
-  ok      um animal ja adotado fica de fora dos disponiveis
+  ok      os animais ja adotados ficam de fora dos disponiveis
   ok      adotante inexistente devolve None
   ok      adocao de animal inexistente devolve None
 
@@ -252,11 +273,11 @@ ANIMAIS
   ok      GET  /api/animais/especie/xyz -> 404
 
 ADOCOES
+  ok      POST /api/adocoes cao grande sem quintal -> 422
   ok      POST /api/adocoes ok -> 201
   ok      POST /api/adocoes data informada -> 201
   ok      POST /api/adocoes animal ja adotado -> 409
   ok      POST /api/adocoes acima do limite -> 409
-  ok      POST /api/adocoes cao grande sem quintal -> 422
   ok      POST /api/adocoes data vazia -> 422
   ok      POST /api/adocoes animal inexistente -> 404
   ok      POST /api/adocoes adotante inexistente -> 404
